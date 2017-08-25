@@ -1,0 +1,61 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/VM_IP.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string"
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_D2_v2"
+    },
+    "adminUserName": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "networkInterfaceId": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-04-30-preview",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "osType": "Windows",
+            "name": "packerwiniis-osDisk.72600562-d379-4bfe-9795-be47ff80ccd7.vhd",
+            "createOption": "FromImage",
+            "image": {
+              "uri": "put your vhd link here"
+            },
+            "vhd": {
+              "uri": "put your vhd link here"
+            },
+            "caching": "ReadWrite"
+          }
+        },
+        "osProfile": {
+          "computerName": "[parameters('vmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "networkProfile": {"networkInterfaces":[{"id":"[parameters('networkInterfaceId')]"}]},
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": false
+          }
+        },
+        "provisioningState": 0
+      },
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "northeurope",
+      "name": "[parameters('vmName')]"
+    }
+  ]
+}
