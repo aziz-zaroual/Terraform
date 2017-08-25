@@ -1,0 +1,50 @@
+{
+    "variables": {
+        "client_id": "b13d706a-ec6c-4231-a35c-9bd4713e74b7",
+        "client_secret": "zJFikn3fQb25yNfUqAEPhybhbaF4HGUQciAQgqkXSUc=",
+        "resource_group_name": "RG-Terraform",
+        "storage_account": "tf0sg01",
+        "subscription_id": "1eb47ed1-c3a9-4369-87e3-43881d9fb93f",
+        "object_id": "cf4fa479-1945-4aa8-b40e-cfeae470a34b",
+        "tenant_id": "4a7c8238-5799-4b16-9fc6-9ad8fce5a7d9"
+    },
+    "builders": [
+        {
+            "type": "azure-arm",
+            "client_id": "{{user `client_id`}}",
+            "client_secret": "{{user `client_secret`}}",
+            "resource_group_name": "{{user `resource_group_name`}}",
+            "storage_account": "{{user `storage_account`}}",
+            "subscription_id": "{{user `subscription_id`}}",
+            "object_id": "{{user `object_id`}}",
+            "tenant_id": "{{user `tenant_id`}}",
+            "capture_container_name": "imagewindows",
+            "capture_name_prefix": "packerwiniis",
+            "os_type": "Windows",
+            "image_publisher": "MicrosoftWindowsServer",
+            "image_offer": "WindowsServer",
+            "image_sku": "2012-R2-Datacenter",
+            "communicator": "winrm",
+            "winrm_use_ssl": "true",
+            "winrm_insecure": "true",
+            "winrm_timeout": "3m",
+            "winrm_username": "packer",
+            "azure_tags": {
+                "madewith": "HashiCorp Packer",
+                "Creator": "Aziz"
+            },
+            "location": "North Europe",
+            "vm_size": "Standard_D2_v2"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "powershell",
+            "inline": [
+                "Add-WindowsFeature Web-Server",
+                "if( Test-Path $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml ){ rm $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml -Force}",
+                "& $Env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /shutdown /quiet"
+            ]
+        }
+    ]
+}
